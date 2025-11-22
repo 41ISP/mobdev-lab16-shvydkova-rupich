@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react"
 import "./Works.css"
-import BookCard from "../../components/BookCard"
+import BookCard from "../../components/book.ui"
+import type { IBook } from "../../components/book.model"
 
 const Works = () => {
     const [bookName, setBookName] = useState("")
-    const [books, setBooks] = useState(undefined)
+    const [books, setBooks] = useState<IBook[] | undefined>(undefined)
     const [error, setError] = useState("")
 
     useEffect(() => {
@@ -42,7 +43,9 @@ const Works = () => {
                 {error && <p>{error}</p>}
             </div>
             <h1>Books</h1>
-            <div className="book-grid">{books && books.map((book) => <BookCard bookKey={book.key} {...book} />)}
+            <div className="book-grid">{books && books.map((book) => <BookCard key={book.key} 
+            bookKey={book.key} title={book.title} first_publish_year={book.first_publish_year} 
+            author_name={book.author_name} cover_i={book.cover_i}/>)}
             </div>
         </div>
     )
