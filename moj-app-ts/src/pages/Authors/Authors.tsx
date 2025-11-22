@@ -1,24 +1,27 @@
 import { useEffect, useState } from "react"
 import { Link, useNavigate, useParams } from "react-router-dom"
 import "./Authors.css"
+import type { IAuthor } from "./author.model"
+import type { IWork } from "../Works/works.model"
 const Authors = () => {
     const { key } = useParams()
     const navigate = useNavigate()
-    const [author, setAuthor] = useState("")
-    const [works, setWorks] = useState([])
+    const [author, setAuthor] = useState<IAuthor | undefined>(undefined)
+    const [works, setWorks] = useState<IWork[]>([])
 
     useEffect(() => {
         const handleSearch = async () => {
             try {
                 const authorRes = await fetch(`https://openlibrary.org/authors/${key}.json`)
-                const authorJson = await authorRes.json()
+                const authorJson: IAuthor = await authorRes.json();
                 setAuthor(authorJson)
                 console.log(authorJson)
 
                 const worksRes = await fetch(`https://openlibrary.org/authors/${key}/works.json`)
-                const worksJson = await worksRes.json()
+                const worksJson = await worksRes.json();
                 console.log(worksRes)
                 setWorks(worksJson.entries || [])
+
             }
             catch (err) {
                 console.error(err)
@@ -30,7 +33,7 @@ const Authors = () => {
 
     }, [key])
 
-    const handleClick = (workKey) => {
+    const handleClick = (workKey: string) => {
         const bookKey = workKey.replace('/works/', '')
         navigate(`/books/${bookKey}`)
     }
@@ -42,7 +45,6 @@ const Authors = () => {
             </div>
         )
     }
-
     return (
         <div className="container">
             <Link to="/" className="back-button">← Back </Link>
@@ -66,14 +68,14 @@ const Authors = () => {
                         <div className="author-bio">
                             <div className="info-section">
                                 <h3>Bio</h3>
-                                <div className="description"> { author.bio ? author.bio.value: "no"}</div>
+                                <div className="description"> {author.bio ? author.bio.value : "no"}</div>
                             </div>
                         </div>
                         <div className="info-section">
                             <h3>Works: ({works.length})</h3>
                             <div className="works-list">
                                 {works.map((work) => (
-                                    <div key={work.key} onClick={() => handleClick(work.key)} className="work-link"> 
+                                    <div key={work.key} onClick={() => handleClick(work.key)} className="work-link">
                                         {work.title}{work.first_publish_date}</div>
                                 ))}
                             </div>

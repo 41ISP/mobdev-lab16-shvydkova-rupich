@@ -1,42 +1,48 @@
 import { useEffect, useState } from "react"
 import { Link, useNavigate, useParams } from "react-router-dom"
 import "./Description.css"
+import type { IBookDescription, IAuthorName } from "./desc.model"
 
 const Description = () => {
-    const [book, setBook] = useState(undefined)
-    const { key } = useParams()
+    const [book, setBook] = useState<IBookDescription | undefined>(undefined)
+    const { key } = useParams<{ key: string }>()
     const navigate = useNavigate()
-    const [error, setError] = useState("")
-    const [authors, setAuthors] = useState([])
+    const [error, setError] = useState<string>("")
+    const [authors, setAuthors] = useState<IAuthorName[]>([])
     useEffect(() => {
         const handleSearch = async () => {
             try {
                 const res = await fetch(`https://openlibrary.org/works/${key}.json`, { mode: "cors" })
-                const json = await res.json();
-                if (json.Response === "False") throw new Error("Not found")
+                if (!res.ok) throw new Error("Book not found")
+                const json: IBookDescription = await res.json()
                 setBook(json);
                 console.log(json);
 
                 const authorNames = await Promise.all(
                     json.authors.map(async (author) => {
-                        const authorRes = await fetch(`https://openlibrary.org${author.author.key}.json`, { mode: "cors" })
+                        const authorRes = await fetch(
+                            `https://openlibrary.org${author.author.key}.json`,
+                            { mode: "cors" }
+                        )
                         const authorJson = await authorRes.json()
-                        return ({
+                        return {
                             key: author.author.key,
-                            name: authorJson.name
-                        })
-                    }))
-                setAuthors(authorNames)
+                            name: authorJson.name,
+                        }
+                    })
+                )
+                setAuthors(authorNames);
             } catch (err) {
-                console.error(err)
+                console.error(err);
+                setError("Failed to load book details");
             }
-
         }
-        handleSearch();
-    }, [])
-
-    const handleAuthors = (key) => {
-        navigate(`/authors/${key.split("/")[2]}`)
+        if (key) {
+            handleSearch();
+        }
+    }, [key]);
+    const handleAuthors = (authorKey: string) => {
+        navigate(`/authors/${authorKey.split("/")[2]}`)
     }
     useEffect(() => { console.log(book,) }, [book])
 
@@ -120,7 +126,7 @@ const Description = () => {
                             <div className="info-section">
                                 <h3>Description</h3>
                                 <div className="description">
-                                    {book.description.value || book.description}
+                                    {book.description.value || book.description.type}
                                 </div>
                             </div>
                         )}
