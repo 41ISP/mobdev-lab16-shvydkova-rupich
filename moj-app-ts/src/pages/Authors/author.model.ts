@@ -1,6 +1,6 @@
 export interface IAuthor {
   name: string;
-  bio: Bio;
+  bio?: string | { value?: string; type?: string };
   personal_name: string;
   remote_ids: Remoteids;
   alternate_names: string[];

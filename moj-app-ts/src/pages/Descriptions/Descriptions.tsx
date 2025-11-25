@@ -1,13 +1,13 @@
 import { useEffect, useState } from "react"
-import { Link, useNavigate, useParams } from "react-router-dom"
+import { useNavigate, useParams } from "react-router-dom"
 import "./Description.css"
 import type { IBookDescription, IAuthorName } from "./desc.model"
+import Button from "../../Button/button.ui"
 
 const Description = () => {
     const [book, setBook] = useState<IBookDescription | undefined>(undefined)
     const { key } = useParams<{ key: string }>()
     const navigate = useNavigate()
-    const [error, setError] = useState<string>("")
     const [authors, setAuthors] = useState<IAuthorName[]>([])
     useEffect(() => {
         const handleSearch = async () => {
@@ -32,9 +32,8 @@ const Description = () => {
                     })
                 )
                 setAuthors(authorNames);
-            } catch (err) {
-                console.error(err);
-                setError("Failed to load book details");
+            } catch (error) {
+                console.error("Failed to load book details");
             }
         }
         if (key) {
@@ -48,7 +47,7 @@ const Description = () => {
 
     return (
         <div className="container">
-            <Link to="/" className="back-button">← Back to Search</Link>
+            <Button to="/" className="back-button">← Back to Search</Button>
             {book && (<div className="book-desc">
                 <div className="header">
                     <h1 className="book-title">{book.title}</h1>
