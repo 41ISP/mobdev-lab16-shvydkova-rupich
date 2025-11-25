@@ -2,6 +2,7 @@ import { useEffect, useState } from "react"
 import "./Works.css"
 import BookCard from "../../components/book.ui"
 import type { IBook } from "../../components/book.model"
+import Button from "../../Button/button.ui"
 
 const Works = () => {
     const [bookName, setBookName] = useState("")
@@ -38,7 +39,7 @@ const Works = () => {
                 <h1>Library</h1>
                 <div className="search-container">
                     <input type="text" className="search-input" placeholder="Search for books..." value={bookName} onChange={(e) => setBookName(e.target.value)} />
-                    <button onClick={handleSearch} className="search-button">Search</button>
+                     <Button onClick={handleSearch} className="search-button">Search</Button>
                 </div>
                 {error && <p>{error}</p>}
             </div>

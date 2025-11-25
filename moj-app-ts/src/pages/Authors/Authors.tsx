@@ -3,6 +3,7 @@ import { Link, useNavigate, useParams } from "react-router-dom"
 import "./Authors.css"
 import type { IAuthor } from "./author.model"
 import type { IWork } from "../Works/works.model"
+import Button from "../../Button/button.ui"
 const Authors = () => {
     const { key } = useParams()
     const navigate = useNavigate()
@@ -40,7 +41,7 @@ const Authors = () => {
     if (!author) {
         return (
             <div className="container">
-                <Link to="/" className="back-button">← Back</Link>
+                <Button to="/" className="back-button">← Back to Search</Button>
                 <div className="error">Автор не найден</div>
             </div>
         )
@@ -68,7 +69,10 @@ const Authors = () => {
                         <div className="author-bio">
                             <div className="info-section">
                                 <h3>Bio</h3>
-                                <div className="description"> {author.bio ? author.bio.value : "no"}</div>
+                                <div className="description">
+                                    {!author.bio ? "no": typeof author.bio === 'string' ? author.bio : author.bio.value || "no"
+                                    }
+                                </div>
                             </div>
                         </div>
                         <div className="info-section">

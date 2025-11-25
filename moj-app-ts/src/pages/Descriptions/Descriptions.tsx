@@ -2,6 +2,7 @@ import { useEffect, useState } from "react"
 import { Link, useNavigate, useParams } from "react-router-dom"
 import "./Description.css"
 import type { IBookDescription, IAuthorName } from "./desc.model"
+import Button from "../../Button/button.ui"
 
 const Description = () => {
     const [book, setBook] = useState<IBookDescription | undefined>(undefined)
@@ -48,7 +49,7 @@ const Description = () => {
 
     return (
         <div className="container">
-            <Link to="/" className="back-button">← Back to Search</Link>
+            <Button to="/" className="back-button">← Back to Search</Button>
             {book && (<div className="book-desc">
                 <div className="header">
                     <h1 className="book-title">{book.title}</h1>
